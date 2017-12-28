@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+
+<!--1. 首先引入js文件-->
+<script src="assets/js/ajaxfileupload.js"></script>
+<!--2 触发上传事件 -->
+<script type="text/javascript">
+    $("#uploadpic").click(function () {
+        var  picinfo = $("img");//上传成功后显示缩略图的标签元素
+        var picurl = $("input[name='picurl']");//上传的图片
+        //把图片属性归0  以免重新选择上传图片时缩放图片 造成的不规则大小
+        picinfo.attr('width','');
+        picinfo.attr('height','');
+        picinfo.css('width','');
+        picinfo.css('height','');
+        picinfo.css('display','none');
+        $.ajaxFileUpload
+        ({
+            url: '', //用于文件上传的服务器端执行脚本地址
+            secureuri: false, //是否需要安全协议，一般设置为false
+            fileElementId: 'image', //文件上传文本框的ID
+            dataType: 'json', //返回值类型 一般设置为json
+            success: function (data)  //服务器成功响应处理函数
+            {
+                //根据返回进行对应操作
+                if(data.status == 'error'){
+                    //上传失败执行的代码
+                }else if(data.status == 'success'){
+                    //上传成功执行的代码
+                }
+            },
+            //服务器响应失败处理函数
+            error: function (data, status, e)
+            {
+                alert('请重新上传');
+            }
+        })
+    })
+</script>
+</body>
+</html>

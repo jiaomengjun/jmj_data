@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <!--------     一. 创建一个文件上传的input框  id为doc   ---------->
+    <!--这是图片上传的input框-->
+    <input type='file' id='doc' name='pic' style='width:60px;margin-left:20px;'>
+
+    <!-----二. 在该input框后面创建一个div里面嵌套img标签   div id为localImag      img标签的id为preview----->
+    <!--这是要展示上传图片的div以及img标签-->
+    <div style="width:100px;height:100px;float:right;" id="localImag">
+        <img src="" id="preview" alt="">
+    </div>
+</body>
+<script type="text/javascript">
+    //========三. 在js里面写,绑定input的默认值发生改变即选中文件的事件并获取到值   调用函数将值作为实参传进去======
+    //绑定更换头像实现预览的效果
+    $("input[name='pic']").live('change',function(){
+        var file = $(this).val();
+        setImagePreview(file);
+    });
+
+    //=======四. 复制下面的代码  也是在js里面======
+    //实现实时预览的函数
+    function setImagePreview(avalue) {
+        var docObj = document.getElementById("doc");
+        //img
+        var imgObjPreview = document.getElementById("preview");
+        //div
+        var divs = document.getElementById("localImag");
+        if (docObj.files && docObj.files[0]) {
+            //火狐下，直接设img属性
+            imgObjPreview.style.display = 'block';
+            imgObjPreview.style.width = '100px';
+            imgObjPreview.style.height = '100px';
+            //imgObjPreview.src = docObj.files[0].getAsDataURL();
+            //火狐7以上版本不能用上面的getAsDataURL()方式获取，需要一下方式
+            imgObjPreview.src = window.URL.createObjectURL(docObj.files[0]);
+        } else {
+            //IE下，使用滤镜
+            docObj.select();
+            var imgSrc = document.selection.createRange().text;
+            var localImagId = document.getElementById("localImag");
+            //必须设置初始大小
+            localImagId.style.width = "100px";
+            localImagId.style.height = "100px";
+            //图片异常的捕捉，防止用户修改后缀来伪造图片
+            try {
+                localImagId.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)"
+                localImagId.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = imgSrc;
+            } catch(e) {
+                alert("您上传的图片格式不正确，请重新选择!");
+                return false;
+            }
+            imgObjPreview.style.display = 'none';
+            document.selection.empty();
+        }
+        return true;
+    }
+
+</script>
+</html>
